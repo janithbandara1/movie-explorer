@@ -22,6 +22,7 @@ import {
   AccountCircle,
   Menu as MenuIcon,
   Favorite,
+  Home as HomeIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useMovieContext } from "../contexts/MovieContext";
@@ -58,6 +59,18 @@ const Navbar = () => {
       <ListItem
         button
         onClick={() => {
+          navigate("/");
+          setMobileOpen(false);
+        }}
+      >
+        <ListItemIcon>
+          <HomeIcon />
+        </ListItemIcon>
+        <ListItemText primary="Home" />
+      </ListItem>
+      <ListItem
+        button
+        onClick={() => {
           navigate("/favorites");
           setMobileOpen(false);
         }}
@@ -67,17 +80,6 @@ const Navbar = () => {
         </ListItemIcon>
         <ListItemText primary="Favorites" />
       </ListItem>
-      {!user && (
-        <ListItem
-          button
-          onClick={() => {
-            navigate("/login");
-            setMobileOpen(false);
-          }}
-        >
-          <ListItemText primary="Login" />
-        </ListItem>
-      )}
     </List>
   );
 
@@ -88,7 +90,6 @@ const Navbar = () => {
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            edge="start"
             onClick={handleDrawerToggle}
             sx={{ mr: 2 }}
           >
@@ -112,6 +113,12 @@ const Navbar = () => {
         >
           {darkMode ? <Brightness7 /> : <Brightness4 />}
         </IconButton>
+
+        {isMobile && !user && (
+          <Button color="inherit" onClick={() => navigate("/login")}>
+            Login
+          </Button>
+        )}
 
         {!isMobile && (
           <Button
