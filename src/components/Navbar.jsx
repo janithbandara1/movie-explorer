@@ -8,8 +8,21 @@ import {
   Avatar,
   Menu,
   MenuItem,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
-import { Brightness4, Brightness7, AccountCircle } from "@mui/icons-material";
+import {
+  Brightness4,
+  Brightness7,
+  AccountCircle,
+  Menu as MenuIcon,
+  Favorite,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useMovieContext } from "../contexts/MovieContext";
 import { useState } from "react";
@@ -18,6 +31,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { darkMode, toggleDarkMode, user, logout } = useMovieContext();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -33,13 +49,56 @@ const Navbar = () => {
     navigate("/");
   };
 
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const drawer = (
+    <List>
+      <ListItem
+        button
+        onClick={() => {
+          navigate("/favorites");
+          setMobileOpen(false);
+        }}
+      >
+        <ListItemIcon>
+          <Favorite />
+        </ListItemIcon>
+        <ListItemText primary="Favorites" />
+      </ListItem>
+      {!user && (
+        <ListItem
+          button
+          onClick={() => {
+            navigate("/login");
+            setMobileOpen(false);
+          }}
+        >
+          <ListItemText primary="Login" />
+        </ListItem>
+      )}
+    </List>
+  );
+
   return (
     <AppBar position="sticky">
       <Toolbar>
+        {isMobile && (
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
         <Typography
-          variant="h6"
+          variant={isMobile ? "h6" : "h5"}
           component="div"
-          sx={{ cursor: "pointer" }}
+          sx={{ cursor: "pointer", fontSize: isMobile ? "1.1rem" : "1.5rem" }}
           onClick={() => navigate("/")}
         >
           Movie Explorer
@@ -53,13 +112,16 @@ const Navbar = () => {
         >
           {darkMode ? <Brightness7 /> : <Brightness4 />}
         </IconButton>
-        <Button
-          color="inherit"
-          onClick={() => navigate("/favorites")}
-          sx={{ mr: 2 }}
-        >
-          Favorites
-        </Button>
+
+        {!isMobile && (
+          <Button
+            color="inherit"
+            onClick={() => navigate("/favorites")}
+            sx={{ mr: 2 }}
+          >
+            Favorites
+          </Button>
+        )}
 
         {user ? (
           <>
@@ -94,11 +156,28 @@ const Navbar = () => {
             </Menu>
           </>
         ) : (
-          <Button color="inherit" onClick={() => navigate("/login")}>
-            Login
-          </Button>
+          !isMobile && (
+            <Button color="inherit" onClick={() => navigate("/login")}>
+              Login
+            </Button>
+          )
         )}
       </Toolbar>
+      <Drawer
+        variant="temporary"
+        anchor="left"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Better mobile performance
+        }}
+        sx={{
+          display: { xs: "block", sm: "none" },
+          "& .MuiDrawer-paper": { boxSizing: "border-box", width: 240 },
+        }}
+      >
+        {drawer}
+      </Drawer>
     </AppBar>
   );
 };
