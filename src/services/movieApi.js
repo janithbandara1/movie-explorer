@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const BASE_URL = 'https://api.themoviedb.org/3';
-const API_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYTdiZjM3M2M2NjdiYjk4YTkzY2M3ZDA1YmU3YzBmOCIsIm5iZiI6MTc0Njc2ODU5Ni42ODgsInN1YiI6IjY4MWQ5MmQ0YTZiODZmZjkzMmMxZGZiMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ._iQp6fTHlHW2OsVXdo6vFmDcWRBUd0oEvhbzv52LSL0'; // Replace with your actual API key
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY; // Using Vite's environment variable format
 
 const api = axios.create({
   baseURL: BASE_URL,

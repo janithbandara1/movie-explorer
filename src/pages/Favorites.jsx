@@ -41,7 +41,7 @@ const Favorites = () => {
 
       <Grid container spacing={3}>
         {favorites.map((movie) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
+          <Grid item size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={movie.id}>
             <MovieCard movie={movie} />
           </Grid>
         ))}

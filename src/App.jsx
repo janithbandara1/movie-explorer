@@ -1,25 +1,32 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, createTheme, CssBaseline, Box, Container } from '@mui/material';
-import { MovieProvider } from './contexts/MovieContext';
-import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import MovieDetails from './pages/MovieDetails';
-import Favorites from './pages/Favorites';
-import Login from './pages/Login';
-import ProtectedRoute from './components/ProtectedRoute';
-import { useMovieContext } from './contexts/MovieContext';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+  Box,
+  Container,
+} from "@mui/material";
+import { MovieProvider } from "./contexts/MovieContext";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Home from "./pages/Home";
+import MovieDetails from "./pages/MovieDetails";
+import Favorites from "./pages/Favorites";
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { useMovieContext } from "./contexts/MovieContext";
 
 const AppContent = () => {
   const { darkMode } = useMovieContext();
 
   const theme = createTheme({
     palette: {
-      mode: darkMode ? 'dark' : 'light',
+      mode: darkMode ? "dark" : "light",
       primary: {
-        main: '#1976d2',
+        main: "#1976d2",
       },
       secondary: {
-        main: '#dc004e',
+        main: "#dc004e",
       },
     },
   });
@@ -27,26 +34,32 @@ const AppContent = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box 
-        sx={{ 
-          minHeight: '100vh',
-          bgcolor: 'background.default' 
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+          bgcolor: "background.default",
         }}
       >
         <Router>
           <Navbar />
-          <Container maxWidth="lg" sx={{ mt: 4 }}>
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<Home />} />
               <Route path="/movie/:id" element={<MovieDetails />} />
-              <Route path="/favorites" element={
-                <ProtectedRoute>
-                  <Favorites />
-                </ProtectedRoute>
-              } />
+              <Route
+                path="/favorites"
+                element={
+                  <ProtectedRoute>
+                    <Favorites />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </Container>
+          <Footer />
         </Router>
       </Box>
     </ThemeProvider>
