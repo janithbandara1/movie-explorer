@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Container,
   Grid,
@@ -14,10 +14,10 @@ import {
   Avatar,
   Tabs,
   Tab,
-} from '@mui/material';
-import { ArrowBack, Favorite, FavoriteBorder, Star } from '@mui/icons-material';
-import { getMovieDetails } from '../services/movieApi';
-import { useMovieContext } from '../contexts/MovieContext';
+} from "@mui/material";
+import { ArrowBack, Favorite, FavoriteBorder, Star } from "@mui/icons-material";
+import { getMovieDetails } from "../services/movieApi";
+import { useMovieContext } from "../contexts/MovieContext";
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -43,8 +43,8 @@ const MovieDetails = () => {
         const data = await getMovieDetails(id);
         setMovie(data);
       } catch (err) {
-        setError('Failed to fetch movie details. Please try again later.');
-        console.error('Error fetching movie details:', err);
+        setError("Failed to fetch movie details. Please try again later.");
+        console.error("Error fetching movie details:", err);
       } finally {
         setLoading(false);
       }
@@ -59,7 +59,12 @@ const MovieDetails = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="80vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -77,16 +82,17 @@ const MovieDetails = () => {
 
   if (!movie) return null;
 
-  const isFavorite = favorites.some(fav => fav.id === movie.id);
+  const isFavorite = favorites.some((fav) => fav.id === movie.id);
   const imageUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-    : 'placeholder-image-url';
-  
+    : "placeholder-image-url";
+
   // Find YouTube trailer if available
-  const trailer = movie.videos?.find(video => 
-    video.type === 'Trailer' && video.site === 'YouTube'
-  ) || movie.videos?.[0];
-  
+  const trailer =
+    movie.videos?.find(
+      (video) => video.type === "Trailer" && video.site === "YouTube"
+    ) || movie.videos?.[0];
+
   // Get top cast members
   const cast = movie.credits?.cast?.slice(0, 10) || [];
 
@@ -94,19 +100,26 @@ const MovieDetails = () => {
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Paper elevation={3} sx={{ p: 3 }}>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
+          <Grid item size={{ xs: 12, md: 4 }}>
             <Box
               component="img"
               src={imageUrl}
               alt={movie.title}
               sx={{
-                width: '100%',
+                width: "100%",
                 borderRadius: 1,
                 boxShadow: 3,
               }}
             />
-            
-            <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+            <Box
+              sx={{
+                mt: 2,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <IconButton
                 onClick={() => toggleFavorite(movie)}
                 color="primary"
@@ -115,14 +128,14 @@ const MovieDetails = () => {
                 {isFavorite ? <Favorite /> : <FavoriteBorder />}
               </IconButton>
               {movie.vote_average > 0 && (
-                <Chip 
-                  icon={<Star />} 
-                  label={movie.vote_average.toFixed(1)} 
+                <Chip
+                  icon={<Star />}
+                  label={movie.vote_average.toFixed(1)}
                   color="secondary"
                 />
               )}
             </Box>
-            
+
             <Box sx={{ mt: 3 }}>
               <Typography variant="subtitle1" fontWeight="bold">
                 Release Date:
@@ -130,7 +143,7 @@ const MovieDetails = () => {
               <Typography variant="body2" gutterBottom>
                 {new Date(movie.release_date).toLocaleDateString()}
               </Typography>
-              
+
               {movie.runtime > 0 && (
                 <>
                   <Typography variant="subtitle1" fontWeight="bold">
@@ -141,25 +154,32 @@ const MovieDetails = () => {
                   </Typography>
                 </>
               )}
-              
+
               {movie.production_companies?.length > 0 && (
                 <>
                   <Typography variant="subtitle1" fontWeight="bold">
                     Production:
                   </Typography>
                   <Typography variant="body2" gutterBottom>
-                    {movie.production_companies.map(company => company.name).join(", ")}
+                    {movie.production_companies
+                      .map((company) => company.name)
+                      .join(", ")}
                   </Typography>
                 </>
               )}
             </Box>
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item size={{ xs: 12, md: 8 }}>
             <Typography variant="h4" gutterBottom>
-              {movie.title} 
+              {movie.title}
               {movie.release_date && (
-                <Typography variant="h6" component="span" color="text.secondary">
-                  {" "}({new Date(movie.release_date).getFullYear()})
+                <Typography
+                  variant="h6"
+                  component="span"
+                  color="text.secondary"
+                >
+                  {" "}
+                  ({new Date(movie.release_date).getFullYear()})
                 </Typography>
               )}
             </Typography>
@@ -174,7 +194,7 @@ const MovieDetails = () => {
                 />
               ))}
             </Box>
-            
+
             <Typography variant="body1" paragraph>
               {movie.tagline && (
                 <Typography variant="subtitle1" fontStyle="italic" gutterBottom>
@@ -183,13 +203,13 @@ const MovieDetails = () => {
               )}
               {movie.overview}
             </Typography>
-            
+
             <Divider sx={{ my: 3 }} />
-            
-            <Box sx={{ width: '100%' }}>
-              <Tabs 
-                value={tabValue} 
-                onChange={handleTabChange} 
+
+            <Box sx={{ width: "100%" }}>
+              <Tabs
+                value={tabValue}
+                onChange={handleTabChange}
                 centered
                 indicatorColor="secondary"
                 textColor="inherit"
@@ -198,22 +218,22 @@ const MovieDetails = () => {
                 {cast.length > 0 && <Tab label="Cast" />}
                 <Tab label="Details" />
               </Tabs>
-              
+
               {trailer && (
                 <TabPanel value={tabValue} index={0}>
                   <Box
                     sx={{
-                      position: 'relative',
-                      paddingBottom: '56.25%', // 16:9 aspect ratio
+                      position: "relative",
+                      paddingBottom: "56.25%", // 16:9 aspect ratio
                       height: 0,
-                      overflow: 'hidden',
+                      overflow: "hidden",
                       borderRadius: 1,
-                      '& iframe': {
-                        position: 'absolute',
+                      "& iframe": {
+                        position: "absolute",
                         top: 0,
                         left: 0,
-                        width: '100%',
-                        height: '100%',
+                        width: "100%",
+                        height: "100%",
                       },
                     }}
                   >
@@ -226,16 +246,20 @@ const MovieDetails = () => {
                   </Box>
                 </TabPanel>
               )}
-              
+
               <TabPanel value={tabValue} index={trailer ? 1 : 0}>
                 <Grid container spacing={2}>
                   {cast.map((person) => (
-                    <Grid item xs={6} sm={4} md={3} key={person.id}>
-                      <Box sx={{ textAlign: 'center', mb: 2 }}>
+                    <Grid item size={{ xs: 6, sm: 4, md: 3 }} key={person.id}>
+                      <Box sx={{ textAlign: "center", mb: 2 }}>
                         <Avatar
-                          src={person.profile_path ? `https://image.tmdb.org/t/p/w185${person.profile_path}` : ''}
+                          src={
+                            person.profile_path
+                              ? `https://image.tmdb.org/t/p/w185${person.profile_path}`
+                              : ""
+                          }
                           alt={person.name}
-                          sx={{ width: 80, height: 80, mx: 'auto', mb: 1 }}
+                          sx={{ width: 80, height: 80, mx: "auto", mb: 1 }}
                         />
                         <Typography variant="subtitle2" component="div" noWrap>
                           {person.name}
@@ -248,33 +272,52 @@ const MovieDetails = () => {
                   ))}
                 </Grid>
               </TabPanel>
-              
-              <TabPanel value={tabValue} index={trailer ? (cast.length > 0 ? 2 : 1) : (cast.length > 0 ? 1 : 0)}>
+
+              <TabPanel
+                value={tabValue}
+                index={
+                  trailer ? (cast.length > 0 ? 2 : 1) : cast.length > 0 ? 1 : 0
+                }
+              >
                 <Grid container spacing={3}>
                   {movie.budget > 0 && (
-                    <Grid item xs={12} sm={6}>
-                      <Typography variant="subtitle1" fontWeight="bold">Budget:</Typography>
-                      <Typography variant="body2">${movie.budget.toLocaleString()}</Typography>
+                    <Grid item size={{ xs: 12, sm: 6 }}>
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        Budget:
+                      </Typography>
+                      <Typography variant="body2">
+                        ${movie.budget.toLocaleString()}
+                      </Typography>
                     </Grid>
                   )}
-                  
+
                   {movie.revenue > 0 && (
-                    <Grid item xs={12} sm={6}>
-                      <Typography variant="subtitle1" fontWeight="bold">Revenue:</Typography>
-                      <Typography variant="body2">${movie.revenue.toLocaleString()}</Typography>
+                    <Grid item size={{ xs: 12, sm: 6 }}>
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        Revenue:
+                      </Typography>
+                      <Typography variant="body2">
+                        ${movie.revenue.toLocaleString()}
+                      </Typography>
                     </Grid>
                   )}
-                  
+
                   {movie.original_language && (
-                    <Grid item xs={12} sm={6}>
-                      <Typography variant="subtitle1" fontWeight="bold">Original Language:</Typography>
-                      <Typography variant="body2">{movie.original_language.toUpperCase()}</Typography>
+                    <Grid item size={{ xs: 12, sm: 6 }}>
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        Original Language:
+                      </Typography>
+                      <Typography variant="body2">
+                        {movie.original_language.toUpperCase()}
+                      </Typography>
                     </Grid>
                   )}
-                  
+
                   {movie.status && (
-                    <Grid item xs={12} sm={6}>
-                      <Typography variant="subtitle1" fontWeight="bold">Status:</Typography>
+                    <Grid item size={{ xs: 12, sm: 6 }}>
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        Status:
+                      </Typography>
                       <Typography variant="body2">{movie.status}</Typography>
                     </Grid>
                   )}
