@@ -15,6 +15,7 @@ import Favorites from "./pages/Favorites";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useMovieContext } from "./contexts/MovieContext";
+import AlertSnackbar from "./components/Snackbar";
 
 const AppContent = () => {
   const { darkMode } = useMovieContext();
@@ -59,6 +60,7 @@ const AppContent = () => {
               />
             </Routes>
           </Container>
+          <AlertSnackbar />
           <Footer />
         </Router>
       </Box>
