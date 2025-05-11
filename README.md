@@ -1,12 +1,61 @@
-# React + Vite
+# Movie Explorer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application for exploring movies, built with Vite and React. Browse popular movies, search for your favorites, and manage your watchlist.
 
-Currently, two official plugins are available:
+[Live Demo](https://movie-explorer-blush-one.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- 🎬 Browse popular and trending movies
+- 🔍 Search functionality to find specific movies
+- 📋 Detailed movie information including cast, ratings, and descriptions
+- ⭐ Save favorite movies to your watchlist
+- 🔐 User authentication
+- 📱 Responsive design for all devices
+- 🌙 Modern UI with smooth transitions
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Technology Stack
+
+- React 18
+- Vite
+- React Router for navigation
+- Context API for state management
+- Modern CSS for styling
+- TMDB API for movie data
+- User authentication
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (version 16 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone [https://github.com/janithbandara1/movie-explorer.git]
+cd movie-explorer
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Create a `.env` file in the root directory with your TMDB API key:
+
+```env
+VITE_TMDB_API_KEY=your_api_key_here
+```
+
+4. Start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
