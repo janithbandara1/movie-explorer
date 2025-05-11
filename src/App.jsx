@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import MovieDetails from './pages/MovieDetails';
 import Favorites from './pages/Favorites';
 import Login from './pages/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 import { useMovieContext } from './contexts/MovieContext';
 
 const AppContent = () => {
@@ -39,7 +40,11 @@ const AppContent = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<Home />} />
               <Route path="/movie/:id" element={<MovieDetails />} />
-              <Route path="/favorites" element={<Favorites />} />
+              <Route path="/favorites" element={
+                <ProtectedRoute>
+                  <Favorites />
+                </ProtectedRoute>
+              } />
             </Routes>
           </Container>
         </Router>

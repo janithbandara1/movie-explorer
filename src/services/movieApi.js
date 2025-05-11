@@ -37,14 +37,16 @@ export const getTrendingMovies = async () => {
 
 export const getMovieDetails = async (movieId) => {
   try {
-    const [details, videos] = await Promise.all([
+    const [details, videos, credits] = await Promise.all([
       api.get(`/movie/${movieId}`),
-      api.get(`/movie/${movieId}/videos`)
+      api.get(`/movie/${movieId}/videos`),
+      api.get(`/movie/${movieId}/credits`)
     ]);
     
     return {
       ...details.data,
-      videos: videos.data.results
+      videos: videos.data.results,
+      credits: credits.data
     };
   } catch (error) {
     console.error('Error fetching movie details:', error);
@@ -75,4 +77,36 @@ export const getGenres = async () => {
     console.error('Error fetching genres:', error);
     throw error;
   }
+};
+
+export const getFilteredMovies = async (filters, page = 1) => {
+  try {
+    const { genre, year, rating } = filters;
+    const params = { page };
+    
+    if (genre) params.with_genres = genre;
+    if (year) params.primary_release_year = year;
+    if (rating) params.vote_average_gte = rating;
+    
+    const response = await api.get('/discover/movie', { params });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching filtered movies:', error);
+    throw error;
+  }
+};
+
+export const authenticateUser = async (username, password) => {
+  // This is a mock authentication function
+  // In a real app, you would make an API call to your auth endpoint
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // Simple validation - in real app, this would be handled by your backend
+      if (username === 'user' && password === 'password') {
+        resolve({ success: true, user: { username } });
+      } else {
+        resolve({ success: false, message: 'Invalid credentials' });
+      }
+    }, 1000);
+  });
 };

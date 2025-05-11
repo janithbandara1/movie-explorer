@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { getGenres } from '../services/movieApi';
 
 const MovieContext = createContext();
 
@@ -15,17 +16,37 @@ export const MovieProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
   const [lastSearch, setLastSearch] = useState('');
   const [darkMode, setDarkMode] = useState(false);
+  const [user, setUser] = useState(null);
+  const [filters, setFilters] = useState({ genre: '', year: '', rating: '' });
+  const [genres, setGenres] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Load favorites and last search from localStorage on mount
+  // Load favorites, last search, user and dark mode from localStorage on mount
   useEffect(() => {
     const storedFavorites = localStorage.getItem('favorites');
     const storedLastSearch = localStorage.getItem('lastSearch');
     const storedDarkMode = localStorage.getItem('darkMode');
+    const storedUser = localStorage.getItem('user');
 
     if (storedFavorites) setFavorites(JSON.parse(storedFavorites));
     if (storedLastSearch) setLastSearch(storedLastSearch);
     if (storedDarkMode) setDarkMode(JSON.parse(storedDarkMode));
+    if (storedUser) setUser(JSON.parse(storedUser));
+    
+    // Fetch genres on mount
+    fetchGenres();
   }, []);
+
+  const fetchGenres = async () => {
+    try {
+      const genresList = await getGenres();
+      setGenres(genresList);
+    } catch (error) {
+      console.error('Failed to fetch genres:', error);
+    }
+  };
 
   // Save to localStorage whenever values change
   useEffect(() => {
@@ -39,6 +60,14 @@ export const MovieProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('darkMode', JSON.stringify(darkMode));
   }, [darkMode]);
+  
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [user]);
 
   const toggleFavorite = (movie) => {
     setFavorites(prev => {
@@ -53,17 +82,61 @@ export const MovieProvider = ({ children }) => {
   const toggleDarkMode = () => {
     setDarkMode(prev => !prev);
   };
+  
+  const login = (userData) => {
+    setUser(userData);
+  };
+  
+  const logout = () => {
+    setUser(null);
+  };
+  
+  const updateFilters = (newFilters) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
+    setCurrentPage(1); // Reset to first page when filters change
+  };
+  
+  const resetFilters = () => {
+    setFilters({ genre: '', year: '', rating: '' });
+    setCurrentPage(1);
+  };
+  
+  const updateMovieList = (data) => {
+    setMovies(data.results);
+    setTotalPages(data.total_pages);
+    setCurrentPage(data.page);
+  };
+  
+  const appendMovies = (data) => {
+    setMovies(prev => [...prev, ...data.results]);
+    setTotalPages(data.total_pages);
+    setCurrentPage(data.page);
+  };
 
   return (
     <MovieContext.Provider value={{
       movies,
       setMovies,
+      updateMovieList,
+      appendMovies,
       favorites,
       toggleFavorite,
       lastSearch,
       setLastSearch,
       darkMode,
-      toggleDarkMode
+      toggleDarkMode,
+      user,
+      login,
+      logout,
+      filters,
+      updateFilters,
+      resetFilters,
+      genres,
+      loading,
+      setLoading,
+      totalPages,
+      currentPage,
+      setCurrentPage
     }}>
       {children}
     </MovieContext.Provider>

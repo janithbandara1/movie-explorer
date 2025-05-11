@@ -7,16 +7,26 @@ import {
   Typography,
   Paper,
   Alert,
+  CircularProgress,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
+import { useMovieContext } from '../contexts/MovieContext';
+import { authenticateUser } from '../services/movieApi';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { user, login } = useMovieContext();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  // If user is already logged in, redirect to home
+  if (user) {
+    return <Navigate to="/" />;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,16 +36,31 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically make an API call to authenticate the user
-    // For now, we'll just simulate a successful login
-    if (formData.username && formData.password) {
-      // Simulate successful login
-      localStorage.setItem('isLoggedIn', 'true');
-      navigate('/');
-    } else {
+    
+    if (!formData.username || !formData.password) {
       setError('Please fill in all fields');
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      setError('');
+      
+      const result = await authenticateUser(formData.username, formData.password);
+      
+      if (result.success) {
+        login(result.user);
+        navigate('/');
+      } else {
+        setError(result.message || 'Authentication failed');
+      }
+    } catch (err) {
+      setError('An error occurred during login. Please try again.');
+      console.error('Login error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,8 +75,8 @@ const Login = () => {
         }}
       >
         <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
-          <Typography component="h1" variant="h5" gutterBottom>
-            Sign in
+          <Typography component="h1" variant="h5" gutterBottom align="center">
+            Sign in to Movie Explorer
           </Typography>
           
           {error && (
@@ -72,6 +97,7 @@ const Login = () => {
               autoFocus
               value={formData.username}
               onChange={handleChange}
+              disabled={loading}
             />
             <TextField
               margin="normal"
@@ -84,15 +110,23 @@ const Login = () => {
               autoComplete="current-password"
               value={formData.password}
               onChange={handleChange}
+              disabled={loading}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={loading}
             >
-              Sign In
+              {loading ? <CircularProgress size={24} /> : 'Sign In'}
             </Button>
+            
+            <Box sx={{ mt: 2 }}>
+              <Alert severity="info">
+                Demo credentials: username: "user", password: "password"
+              </Alert>
+            </Box>
           </Box>
         </Paper>
       </Box>
