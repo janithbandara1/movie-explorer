@@ -36,7 +36,7 @@ A modern React application for exploring movies, built with Vite and React. Brow
 1. Clone the repository:
 
 ```bash
-git clone [https://github.com/janithbandara1/movie-explorer.git]
+git clone https://github.com/janithbandara1/movie-explorer.git
 cd movie-explorer
 ```
 
